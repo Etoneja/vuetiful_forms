@@ -3,20 +3,10 @@
     <div class="row">
       <div class="col-12">
         <form v-on:submit.prevent="onSubmit">
-          <div class="form-group">
-            <label>First Name:</label>
-            <input v-model="form.firstName" type="text" class="form-control">
-          </div>
 
-          <div class="form-group">
-            <label>Last Name:</label>
-            <input v-model="form.lastName" type="text" class="form-control">
-          </div>
-
-          <div class="form-group">
-            <label>Email:</label>
-            <input v-model="form.email" type="email" class="form-control">
-          </div>
+          <BaseInput label="First Name:" type="text" v-model="form.firstName" />
+          <BaseInput label="Last Name:" type="text" v-model="form.lastName" />
+          <BaseInput label="Email:" type="email" v-model="form.email" />
 
           <div class="form-group">
             <button 
@@ -33,6 +23,8 @@
 </template>
 
 <script>
+import BaseInput from "@/components/BaseInput"
+
 import axios from "axios"
 
 export default {
@@ -45,6 +37,9 @@ export default {
         email: ""
       }
     }
+  },
+  components: {
+    BaseInput,
   },
   computed: {
     formIsValid: function() {
