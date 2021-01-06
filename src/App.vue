@@ -21,6 +21,7 @@
           <div class="form-group">
             <button 
               v-bind:disabled="!formIsValid"
+              v-on:click.prevent="onSubmit"
               type="submit" 
               class="btn btn-primary"
             >Submit</button>
@@ -32,6 +33,8 @@
 </template>
 
 <script>
+import axios from "axios"
+
 export default {
   name: 'App',
   data: function() {
@@ -55,7 +58,13 @@ export default {
   methods: {
     onSubmit: function() {
       if (!this.formIsValid) return
-      console.log("form submit")
+      axios.post("http://localhost:3000/dolphins", {params: this.form})
+        .then(response => {
+          console.log(response)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
