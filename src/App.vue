@@ -8,6 +8,8 @@
           <BaseInput label="Last Name:" type="text" v-model="form.lastName" />
           <BaseInput label="Email:" type="email" v-model="form.email" />
 
+          <BaseSelect label="What you think about Vue?" v-bind:options="loveOptions" v-model="form.love" />
+
           <div class="form-group">
             <button 
               v-bind:disabled="!formIsValid"
@@ -24,6 +26,7 @@
 
 <script>
 import BaseInput from "@/components/BaseInput"
+import BaseSelect from "@/components/BaseSelect"
 
 import axios from "axios"
 
@@ -34,12 +37,19 @@ export default {
       form: {
         firstName: "",
         lastName: "",
-        email: ""
-      }
+        email: "",
+        love: "good"
+      },
+      loveOptions: [
+        {label: "good", value: "good"},
+        {label: "ok", value: "ok"},
+        {label: "bad", value: "bad"},
+      ]
     }
   },
   components: {
     BaseInput,
+    BaseSelect,
   },
   computed: {
     formIsValid: function() {
