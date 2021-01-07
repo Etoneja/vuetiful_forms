@@ -24,7 +24,7 @@ export default {
         },
         type: {
             type: String,
-            default: "test",
+            default: "text",
             validator(value) {
                 return [
                     "text",

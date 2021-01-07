@@ -1,50 +1,55 @@
 <template>
   <div id="app" class="container py-4">
+
+    <TheHeader />
+
     <div class="row">
       <div class="col-12">
         <form v-on:submit.prevent="onSubmit">
 
           <BaseInput
             label="First Name:"
-            type="text"
-            v-model.trim="$v.form.firstName.$model"
+            v-bind:value="$store.state.user.firstName"
             v-bind:validator="$v.form.firstName"
+            v-on:input="updateUser('firstName', $event)"
           />
           <BaseInput
             label="Last Name:"
-            type="text"
-            v-model.trim="$v.form.lastName.$model"
+            v-bind:value="$store.state.user.lastName"
             v-bind:validator="$v.form.lastName"
+            v-on:input="updateUser('lastName', $event)"
           />
           <BaseInput
             label="Phone:"
             v-bind:mask="'(###)###-##-##'"
-            type="text"
-            v-model.trim="$v.form.phone.$model"
+            v-bind:value="$store.state.user.phone"
             v-bind:validator="$v.form.phone"
+            v-on:input="updateUser('phone', $event)"
           />
           <BaseInput
             label="Email:" 
             type="email"
-            v-model.trim="$v.form.email.$model"
+            v-bind:value="$store.state.user.email"
             v-bind:validator="$v.form.email"
+            v-on:input="updateUser('email', $event)"
           />
           <BaseInput
             label="Website:"
-            type="text"
-            v-model.trim="$v.form.website.$model"
+            v-bind:value="$store.state.user.website"
             v-bind:validator="$v.form.website"
+            v-on:input="updateUser('website', $event)"
           />
 
           <BaseSelect
             label="What you think about Vue?"
             v-bind:options="loveOptions"
-            v-model="$v.form.love.$model"
+            v-bind:value="$store.state.user.love"
             v-bind:validator="$v.form.love"
+            v-on:input="updateUser('love', $event)"
           />
 
           <div class="form-group">
-            <button 
+            <button
               v-bind:disabled="$v.$error"
               v-on:click.prevent="onSubmit"
               type="submit" 
@@ -60,22 +65,16 @@
 <script>
 import BaseInput from "@/components/BaseInput"
 import BaseSelect from "@/components/BaseSelect"
+import TheHeader from "@/components/TheHeader"
 
 import { alpha, required, email, url } from "vuelidate/lib/validators"
 import axios from "axios"
+import { mapState } from "vuex"
 
 export default {
   name: 'App',
   data: function() {
     return {
-      form: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        website: "",
-        love: ""
-      },
       loveOptions: [
         {label: "good", value: "good"},
         {label: "ok", value: "ok"},
@@ -110,9 +109,20 @@ export default {
   components: {
     BaseInput,
     BaseSelect,
+    TheHeader
   },
-  computed: {},
+  computed: {
+    ...mapState({form: "user"}),
+  },
   methods: {
+    updateUser: function(property, value) {
+      this.$store.dispatch("updateUserData", {
+        property: property,
+        value: value
+      });
+
+      this.$v.form[property].$touch();
+    },
     onSubmit: function() {
       this.$v.$touch()
       if (this.$v.$invalid) return;
@@ -127,6 +137,9 @@ export default {
           console.log("some error happen", err)
         })
     }
+  },
+  created: function() {
+    this.$store.dispatch("getLoggedInUser")
   }
 }
 </script>
