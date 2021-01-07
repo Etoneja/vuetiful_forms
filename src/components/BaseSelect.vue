@@ -3,8 +3,16 @@
         <label>{{ label || "No label for select"  }}</label>
         <select
             class="form-control"
+            v-bind:class="{
+              'is-valid': !validator.$error && validator.$dirty,
+              'is-invalid': validator.$error
+            }"
             v-on:change="$emit('input', $event.target.value)"
         >
+            <option
+                selected
+                disabled
+            />
             <option
                 v-for="opt in options"
                 v-bind:key="opt.value"
@@ -34,6 +42,13 @@ export default {
         value: {
             type: String,
             required: true
+        },
+        validator: {
+            type: Object,
+            required: false,
+            validator: function($v) {
+                return Object.prototype.hasOwnProperty.call($v, "$model")
+            }
         }
     }
 }
